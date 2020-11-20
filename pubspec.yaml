@@ -23,13 +23,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  english_words: ^3.1.5
   provider: ^4.3.2+2
   image_picker: ^0.6.7+14
   animated_floatactionbuttons: ^0.1.0
   path_provider: ^1.6.24
   logger: ^0.9.4
-  painter: ^0.4.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -28,7 +28,11 @@ class DrawingPage extends StatelessWidget{
     _args = ModalRoute.of(context).settings.arguments;
     _painterController.setBackgroundImageByPath(_args.imagePath);
     return Scaffold(
-
+      appBar: AppBar(
+        title: Text(
+          "Title"
+        ),
+      ),
       body: MultiProvider(
         providers: [
           ChangeNotifierProvider<PainterController>(create: (context) => _painterController),
@@ -37,12 +41,19 @@ class DrawingPage extends StatelessWidget{
         child: GestureDetector(
           child: Consumer2<PainterController, ImageSaver>(
             builder: (context, controller, saver, widget){
+              final painter = controller.buildPainter(context, Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height - Scaffold.of(context).appBarMaxHeight));
               if(!saver.isLoading && !controller.isLoading){
-                return controller.buildPainter(context, MediaQuery.of(context).size);
+                return painter;
               }else{
                 return Stack(
                   children: <Widget>[
-                    controller.buildPainter(context, MediaQuery.of(context).size),
+                    IgnorePointer(
+                      child: painter,
+                    ),
+                    BackdropFilter(
+                      filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                      child: Container(),
+                    ),
                     Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -88,12 +99,13 @@ class DrawingPage extends StatelessWidget{
       FloatingActionButton(
         heroTag: "Save",
         onPressed: () async {
-          final image = await _painterController.getImage();
-          await _imageSaver.saveImage(_args.imageName, image);
-
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text("Image saved as ${_args.imageName}"),
-          ));
+          if(!_imageSaver.isLoading){
+            final image = await _painterController.getImage();
+            await _imageSaver.saveImage(_args.imageName, image);
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Image saved as ${_args.imageName}"),
+            ));
+          }
         },
         tooltip: "Save drawing",
         child: Icon(Icons.save_alt),
