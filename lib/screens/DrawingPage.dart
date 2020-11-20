@@ -50,10 +50,6 @@ class DrawingPage extends StatelessWidget{
                     IgnorePointer(
                       child: painter,
                     ),
-                    BackdropFilter(
-                      filter: ui.ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                      child: Container(),
-                    ),
                     Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -113,23 +109,5 @@ class DrawingPage extends StatelessWidget{
     ];
   }
 
-  Future<String> get _localPath async {
-    final dir = await getExternalStorageDirectory();
-    Logger().v(dir.path);
-    return dir.path;
-  }
-
-  Future<File> _getSaveFile(String fileName) async {
-    final path = await _localPath;
-    return File('$path/$fileName.png');
-  }
-
-  Future<Null> _saveImage(String imageName, ui.Image image) async {
-    final saveFile = await _getSaveFile(imageName);
-    final imageBytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    final buffer = imageBytes.buffer;
-    final intList = buffer.asUint8List(imageBytes.offsetInBytes, imageBytes.lengthInBytes);
-    saveFile.writeAsBytes(intList);
-  }
 
 }
