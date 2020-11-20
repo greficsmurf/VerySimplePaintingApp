@@ -19,11 +19,6 @@ class ImageSaver extends ChangeNotifier{
     return dir.path;
   }
 
-  Future<File> _getSaveFile(String fileName) async {
-    final path = await _localPath;
-    return File('$path/$fileName.png');
-  }
-
   Future<Null> saveImage(String imageName, ui.Image image) async {
     _isLoading = true;
     notifyListeners();
@@ -31,12 +26,11 @@ class ImageSaver extends ChangeNotifier{
     final imageBytes = await image.toByteData(format: ui.ImageByteFormat.png);
     final buffer = imageBytes.buffer;
     final intList = buffer.asUint8List(imageBytes.offsetInBytes, imageBytes.lengthInBytes);
-    // await saveFile.writeAsBytes(intList);
 
     if(await Permission.storage.request().isGranted){
       final result = await ImageGallerySaver.saveImage(
           intList,
-          name: "hello");
+          name: imageName);
     }
 
 

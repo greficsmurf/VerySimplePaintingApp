@@ -44,7 +44,9 @@ class PainterController extends ChangeNotifier{
   }
 
   void undo(){
-    _paths.removeLast();
+    try{
+      _paths.removeLast();
+    }catch(Exception){}
   }
 
   void clear(){
